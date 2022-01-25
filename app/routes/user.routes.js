@@ -6,7 +6,7 @@ const {
   findOne,
   update,
   deleteAll,
-} = require("../controllers/tbl_users.controller.js");
+} = require("../controllers/tbl_users.controller");
 
 // Create a new users
 router.post("/api/v1/user", create);

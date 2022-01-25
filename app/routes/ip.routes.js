@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const { create } = require("../controllers/tbl_user_addresses.controller.js");
+const { create } = require("../controllers/tbl_ips.controller.js");
 
 // Create a new Address
-router.post("/api/v1/address", create);
+router.post("/api/v1/ip", create);
 
 module.exports = router;
