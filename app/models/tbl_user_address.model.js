@@ -1,21 +1,36 @@
 module.exports = (sequelize, Sequelize) => {
-  const TblUserAddress = sequelize.define("tbl_user_address", {
-    user_id: {
+  const Stacking = sequelize.define("stacking", {
+    tokenAddress: {
       type: Sequelize.STRING,
     },
-    address: {
+    userAddress: {
       type: Sequelize.STRING,
     },
-    hex_address: {
+    package: {
       type: Sequelize.STRING,
     },
-    private_key: {
+    totalAmount: {
+      type: Sequelize.FLOAT,
+    },
+    apy: {
       type: Sequelize.STRING,
     },
-    datetime: {
+    stackDate: {
       type: Sequelize.STRING,
+    },
+    lockedDay: {
+      type: Sequelize.STRING,
+    },
+    endDate: {
+      type: Sequelize.STRING,
+    },
+    estimatedInterest: {
+      type: Sequelize.STRING,
+    },
+    rawData: {
+      type: Sequelize.TEXT,
     },
   });
 
-  return TblUserAddress;
+  return Stacking;
 };

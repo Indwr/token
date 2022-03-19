@@ -1,12 +1,9 @@
 module.exports = (sequelize, Sequelize) => {
-  const TblIps = sequelize.define("tbl_ips", {
-    ip_address: {
-      type: Sequelize.STRING,
-    },
-    user_id: {
-      type: Sequelize.STRING,
+  const totalStacked = sequelize.define("totalStacked", {
+    totalTokens: {
+      type: Sequelize.FLOAT,
     },
   });
 
-  return TblIps;
+  return totalStacked;
 };

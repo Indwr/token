@@ -19,8 +19,6 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-db.tbl_users = require("./tbl_users.model.js")(sequelize, Sequelize);
-db.tbl_ips = require("./tbl_ips.model.js")(sequelize, Sequelize);
 db.tbl_user_address = require("./tbl_user_address.model.js")(
   sequelize,
   Sequelize
