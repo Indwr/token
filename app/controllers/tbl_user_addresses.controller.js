@@ -8,24 +8,6 @@ const Common = require("@ethereumjs/common");
 
 // Create and Save a new User
 exports.create = async (req, res) => {
-  if (!req.body.user_id) {
-    res.status(400).send({
-      message: "User Id can not be empty!",
-    });
-    return;
-  }
-
-  let ip = req.socket.remoteAddress;
-
-  const checkIp = await TblIps.findOne({
-    where: { user_id: req.body.user_id, ip_address: ip },
-  });
-  if (checkIp === null) {
-    res.status(400).send({
-      message: "Ip Addriness not valid please try again later..",
-    });
-    return;
-  }
   const address = {
     hex_address: req.body.hex_address,
     user_id: req.body.user_id,
