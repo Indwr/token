@@ -21,6 +21,9 @@ module.exports = (sequelize, Sequelize) => {
     lockedDay: {
       type: Sequelize.STRING,
     },
+    noOfStackedToken: {
+      type: Sequelize.FLOAT,
+    },
     endDate: {
       type: Sequelize.STRING,
     },

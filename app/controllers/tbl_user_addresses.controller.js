@@ -1,30 +1,76 @@
 const db = require("../models");
 const TblUserAddresses = db.tbl_user_address;
+const TotalStackedToken = db.tblTotalStacked;
 const TblIps = db.tbl_ips;
 const Op = db.Sequelize.Op;
 const sha1 = require("sha1");
 const Web3 = require("web3");
 const Common = require("@ethereumjs/common");
 
+exports.getListingLockedToken = async (req, res) => {
+  const { address } = req.body;
+  const totalStackedToken = await TblUserAddresses.findAll({
+    where: {
+      userAddress: address,
+    },
+  });
+  let totalListingLockedToken = totalStackedToken ?? [];
+  res.status(200).send({
+    success: 1,
+    status: "success",
+    totalListingLockedToken: totalListingLockedToken,
+  });
+};
+
+exports.getTotalStackedToken = async (req, res) => {
+  const totalStackedToken = await TotalStackedToken.findAll();
+  let totalStackedTokens =
+    totalStackedToken[0] === undefined ? 0 : totalStackedToken[0].totalTokens;
+
+  res.status(200).send({
+    success: 1,
+    status: "success",
+    totalStackedToken: totalStackedTokens,
+  });
+};
 // Create and Save a new User
 exports.create = async (req, res) => {
+  const {
+    tokenAddress,
+    userAddress,
+    package,
+    totalAmount,
+    apy,
+    stackDate,
+    lockedDay,
+    noOfStackedToken,
+    endDate,
+    estimatedInterest,
+    rawData,
+  } = req.body;
   const address = {
-    hex_address: req.body.hex_address,
-    user_id: req.body.user_id,
-    address: req.body.address,
-    private_key: req.body.private_key,
-    datetime: req.body.datetime,
+    tokenAddress: tokenAddress,
+    userAddress: userAddress,
+    package: package,
+    totalAmount: totalAmount,
+    apy: apy,
+    stackDate: stackDate,
+    lockedDay: lockedDay,
+    noOfStackedToken: noOfStackedToken,
+    endDate: endDate,
+    estimatedInterest: estimatedInterest,
+    rawData: rawData,
   };
-
   TblUserAddresses.create(address)
     .then((data) => {
-      res.send(data);
+      return res
+        .status(200)
+        .send({ success: 1, status: "success", result: data });
     })
     .catch((err) => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while creating the Address.",
-      });
+      return res
+        .status(500)
+        .send({ success: 0, status: "fail", message: err.message });
     });
 };
 
