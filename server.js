@@ -5,9 +5,9 @@ const app = express();
 let router = express.Router();
 const Routes = require("./app/routes");
 
-db.sequelize.sync({ force: true }).then(() => {
-  console.log("Drop and re-sync db.");
-});
+// db.sequelize.sync({ force: true }).then(() => {
+//   console.log("Drop and re-sync db.");
+// });
 var corsOptions = {
   origin: [
     "http://localhost:3001",

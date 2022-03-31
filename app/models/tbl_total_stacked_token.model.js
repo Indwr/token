@@ -3,6 +3,7 @@ module.exports = (sequelize, Sequelize) => {
     totalTokens: {
       type: Sequelize.FLOAT,
     },
+    type: Sequelize.STRING,
   });
 
   return TotalStacked;

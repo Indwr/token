@@ -2,10 +2,12 @@ const db = require("../models");
 const TblUserAddresses = db.tbl_user_address;
 const TotalStackedToken = db.tblTotalStacked;
 const TblIps = db.tbl_ips;
+const sequelize = require("sequelize");
 const Op = db.Sequelize.Op;
 const sha1 = require("sha1");
 const Web3 = require("web3");
 const Common = require("@ethereumjs/common");
+const axios = require("axios");
 
 exports.getListingLockedToken = async (req, res) => {
   const { address } = req.body;
@@ -22,6 +24,60 @@ exports.getListingLockedToken = async (req, res) => {
   });
 };
 
+exports.getAbiData = async (req, res) => {
+  const { address } = req.body;
+  var config = {
+    method: "get",
+    url: `https://api.bscscan.com/api?module=contract&action=getabi&address=${address}&apikey=5CYGIHYGEG13CK77VGKW42CZ886GYYXZX1`,
+    headers: {},
+  };
+  axios(config)
+    .then(function (response) {
+      res.status(200).send({
+        success: 1,
+        status: "success",
+        data: response.data.result,
+        message: "Success",
+      });
+    })
+    .catch(function (error) {
+      res.status(400).send({
+        success: 0,
+        status: "error",
+        data: [],
+        message: error,
+      });
+    });
+};
+
+exports.getTokenPrice = async (req, res) => {
+  var config = {
+    method: "get",
+    url: "https://api.coingecko.com/api/v3/simple/price?ids=metapets&vs_currencies=USD&include_market_cap=true",
+    headers: {},
+  };
+  let totalStackedToken = await getTotalStacked();
+  axios(config)
+    .then(function (response) {
+      res.status(200).send({
+        success: 1,
+        status: "success",
+        data: JSON.stringify(response.data.metapets.usd),
+        totalStackedToken: totalStackedToken * response.data.metapets.usd,
+        message: "Success",
+      });
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+};
+
+async function getTotalStacked() {
+  const totalStackedToken = await TotalStackedToken.findAll();
+  return totalStackedToken[0] === undefined
+    ? 0
+    : totalStackedToken[0].totalTokens;
+}
 exports.getTotalStackedToken = async (req, res) => {
   const totalStackedToken = await TotalStackedToken.findAll();
   let totalStackedTokens =
@@ -33,6 +89,92 @@ exports.getTotalStackedToken = async (req, res) => {
     totalStackedToken: totalStackedTokens,
   });
 };
+
+exports.getTotalStackedAccordingToPackage = async (req, res) => {
+  // const totalStackedToken = await
+  const totalStackedToken = await Promise.all([
+    TblUserAddresses.findAll({
+      group: "package",
+      attributes: [
+        // "tokenAddress",
+        // "userAddress",
+        // "package",
+        // "totalAmount",
+        // "apy",
+        // "stackDate",
+        // "lockedDay",
+        // "endDate",
+        // "estimatedInterest",
+        // "rawData",
+        // "createdAt",
+        // "updatedAt",
+        [
+          sequelize.fn("sum", sequelize.col("noOfStackedToken")),
+          "noOfStockedToken",
+        ],
+      ],
+      where: {
+        package: "gold",
+      },
+    }),
+    TblUserAddresses.findAll({
+      group: "package",
+      attributes: [
+        // "tokenAddress",
+        // "userAddress",
+        // "package",
+        // "totalAmount",
+        // "apy",
+        // "stackDate",
+        // "lockedDay",
+        // "endDate",
+        // "estimatedInterest",
+        // "rawData",
+        // "createdAt",
+        // "updatedAt",
+        [
+          sequelize.fn("sum", sequelize.col("noOfStackedToken")),
+          "noOfStockedToken",
+        ],
+      ],
+      where: {
+        package: "silver",
+      },
+    }),
+    TblUserAddresses.findAll({
+      group: "package",
+      attributes: [
+        // "tokenAddress",
+        // "userAddress",
+        // "package",
+        // "totalAmount",
+        // "apy",
+        // "stackDate",
+        // "lockedDay",
+        // "endDate",
+        // "estimatedInterest",
+        // "rawData",
+        // "createdAt",
+        // "updatedAt",
+        [
+          sequelize.fn("sum", sequelize.col("noOfStackedToken")),
+          "noOfStockedToken",
+        ],
+      ],
+      where: {
+        package: "diamond",
+      },
+    }),
+  ]);
+  res.status(200).send({
+    success: 1,
+    status: "success",
+    gold: totalStackedToken[0].length > 0 ? totalStackedToken[0] : [],
+    silver: totalStackedToken[1].length > 0 ? totalStackedToken[1] : [],
+    diamond: totalStackedToken[2].length > 0 ? totalStackedToken[2] : [],
+  });
+};
+
 // Create and Save a new User
 exports.create = async (req, res) => {
   const {
@@ -76,7 +218,6 @@ exports.create = async (req, res) => {
 
 exports.getBnbBalance = async (req, res) => {
   const address = "0xEcf9a23671a63d2f722f7362ECF6A48b1483b302";
-  console.log(address);
   try {
     const web3 = new Web3("https://bsc-dataseed1.binance.org:443");
     let balance = await web3.eth.getBalance(address);
