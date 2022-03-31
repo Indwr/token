@@ -8,17 +8,17 @@ const Routes = require("./app/routes");
 // db.sequelize.sync({ force: true }).then(() => {
 //   console.log("Drop and re-sync db.");
 // });
-var corsOptions = {
-  origin: [
-    "http://localhost:3001",
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-    "https://metapetscoin.com",
-    "https://blockchain-metapetscoin.netlify.app",
-  ],
-};
+// var corsOptions = {
+//   origin: [
+//     "http://localhost:3001",
+//     "http://localhost:3000",
+//     "http://127.0.0.1:3000",
+//     "https://metapetscoin.com",
+//     "https://blockchain-metapetscoin.netlify.app",
+//   ],
+// };
 
-app.use(cors(corsOptions));
+app.use(cors());
 
 // parse requests of content-type - application/json
 app.use(express.json());
