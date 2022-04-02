@@ -203,6 +203,16 @@ exports.create = async (req, res) => {
     estimatedInterest: estimatedInterest,
     rawData: rawData,
   };
+  const totalStackedToken = await TotalStackedToken.findOne();
+  const sustainableManagementData = {
+    totalTokens:
+      parseFloat(totalStackedToken.totalTokens) + parseFloat(totalAmount),
+  };
+  console.log(sustainableManagementData);
+  TotalStackedToken.update(sustainableManagementData, {
+    where: { id: totalStackedToken.id },
+  });
+
   TblUserAddresses.create(address)
     .then((data) => {
       return res
