@@ -8,6 +8,7 @@ const sha1 = require("sha1");
 const Web3 = require("web3");
 const Common = require("@ethereumjs/common");
 const axios = require("axios");
+const BigNumber = require("bignumber.js");
 
 exports.getListingLockedToken = async (req, res) => {
   const { address } = req.body;
@@ -534,9 +535,15 @@ exports.getBebTokenBalance = async (req, res) => {
   ];
   var contract = new web3.eth.Contract(bep20AbiJson, contractAddress);
   try {
-    let balance = await contract.methods.balanceOf(address).call();
+    var tokenBalance = 0;
 
-    res.status(200).send({ success: 1, status: "success", balance: balance });
+    let balance = await contract.methods.balanceOf(address).call();
+    let decimals = await contract.methods.decimals().call();
+    tokenBalance = parseFloat(balance) / Math.pow(10, decimals);
+    const bn = new BigNumber(balance + "e-" + decimals);
+    res
+      .status(200)
+      .send({ success: 1, status: "success", balance: bn.toString() });
   } catch (err) {
     res.status(200).send({ success: 0, status: "fail", message: err });
   }
