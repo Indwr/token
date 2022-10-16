@@ -1,8 +1,8 @@
 {
   "development": {
-    "username": "root",
-    "password": "551355@Choomu",
-    "database": "metapets",
+    "username": "sonu",
+    "password": "password",
+    "database": "testdb",
     "host": "127.0.0.1",
     "dialect": "mysql" 
   },

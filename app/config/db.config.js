@@ -1,8 +1,8 @@
 module.exports = {
   HOST: "127.0.0.1",
-  USER: "root",
-  PASSWORD: "551355@Choomu",
-  DB: "metapets",
+  USER: "sonu",
+  PASSWORD: "password",
+  DB: "testdb",
   dialect: "mysql",
   pool: {
     max: 5,
